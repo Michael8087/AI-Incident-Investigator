@@ -1,4 +1,5 @@
 import { AlertOctagon, Clock, Radar, ShieldCheck } from "lucide-react";
+import { ThemeToggle } from "./theme-toggle";
 
 function Kpi({ icon: Icon, label, value, tone }: { icon: typeof Clock; label: string; value: string; tone?: "critical" }) {
   return (
@@ -31,11 +32,16 @@ export function KpiBar({
   avgTriage: string;
 }) {
   return (
-    <div className="flex flex-wrap items-stretch divide-line border-b border-line bg-surface/60 px-4 md:flex-nowrap md:px-6">
-      <Kpi icon={Radar} label="Open Incidents" value={String(openIncidents)} />
-      <Kpi icon={AlertOctagon} label="Critical Today" value={String(criticalToday)} tone={criticalToday > 0 ? "critical" : undefined} />
-      <Kpi icon={ShieldCheck} label="Assets Monitored" value={assetsMonitored.toLocaleString()} />
-      <Kpi icon={Clock} label="Avg. Time to Triage" value={avgTriage} />
+    <div className="flex flex-wrap items-stretch justify-between divide-line border-b border-line bg-surface/60 px-4 md:flex-nowrap md:px-6">
+      <div className="flex flex-wrap items-stretch divide-line md:flex-nowrap">
+        <Kpi icon={Radar} label="Open Incidents" value={String(openIncidents)} />
+        <Kpi icon={AlertOctagon} label="Critical Today" value={String(criticalToday)} tone={criticalToday > 0 ? "critical" : undefined} />
+        <Kpi icon={ShieldCheck} label="Assets Monitored" value={assetsMonitored.toLocaleString()} />
+        <Kpi icon={Clock} label="Avg. Time to Triage" value={avgTriage} />
+      </div>
+      <div className="hidden shrink-0 items-center md:flex">
+        <ThemeToggle />
+      </div>
     </div>
   );
 }

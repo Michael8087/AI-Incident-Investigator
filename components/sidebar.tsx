@@ -2,7 +2,6 @@
 
 import { AlertTriangle, BookOpen, LayoutGrid, ShieldHalf } from "lucide-react";
 import clsx from "clsx";
-import { ThemeToggle } from "./theme-toggle";
 
 export type ConsoleView = "command-center" | "threat-intel" | "playbooks";
 
@@ -23,7 +22,6 @@ export function Sidebar({ view, onChange }: { view: ConsoleView; onChange: (view
           <p className="truncate font-mono text-[13px] font-semibold leading-tight tracking-tight text-ink">Incident Investigator</p>
           <p className="font-mono text-[10px] uppercase tracking-widest text-ink-faint">SOC Console</p>
         </div>
-        <ThemeToggle />
       </div>
 
       <nav className="flex-1 space-y-1 p-3">
