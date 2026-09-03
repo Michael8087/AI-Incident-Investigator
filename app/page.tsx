@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BookOpen, CheckCircle2, Globe2, LayoutGrid } from "lucide-react";
 import clsx from "clsx";
 import { Sidebar, type ConsoleView } from "@/components/sidebar";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { KpiBar } from "@/components/kpi-bar";
 import { IncidentQueue } from "@/components/incident-queue";
 import { NewAlertModal } from "@/components/new-alert-modal";
@@ -105,19 +106,22 @@ export default function HomePage() {
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <div className="flex shrink-0 items-center justify-between border-b border-line px-4 py-2.5 md:hidden">
           <span className="font-mono text-xs font-semibold text-ink">Incident Investigator</span>
-          <div className="flex gap-1">
-            {MOBILE_NAV.map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                onClick={() => setView(id)}
-                className={clsx(
-                  "inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px]",
-                  view === id ? "bg-accent-soft text-accent" : "text-ink-faint"
-                )}
-              >
-                <Icon className="h-3.5 w-3.5" /> {label}
-              </button>
-            ))}
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1">
+              {MOBILE_NAV.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setView(id)}
+                  className={clsx(
+                    "inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px]",
+                    view === id ? "bg-accent-soft text-accent" : "text-ink-faint"
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5" /> {label}
+                </button>
+              ))}
+            </div>
+            <ThemeToggle />
           </div>
         </div>
 

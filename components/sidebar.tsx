@@ -2,6 +2,7 @@
 
 import { AlertTriangle, BookOpen, LayoutGrid, ShieldHalf } from "lucide-react";
 import clsx from "clsx";
+import { ThemeToggle } from "./theme-toggle";
 
 export type ConsoleView = "command-center" | "threat-intel" | "playbooks";
 
@@ -18,10 +19,11 @@ export function Sidebar({ view, onChange }: { view: ConsoleView; onChange: (view
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-soft text-accent ring-1 ring-inset ring-accent/30">
           <ShieldHalf className="h-4.5 w-4.5" strokeWidth={2.25} />
         </span>
-        <div>
-          <p className="font-mono text-[13px] font-semibold leading-tight tracking-tight text-ink">Incident Investigator</p>
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-mono text-[13px] font-semibold leading-tight tracking-tight text-ink">Incident Investigator</p>
           <p className="font-mono text-[10px] uppercase tracking-widest text-ink-faint">SOC Console</p>
         </div>
+        <ThemeToggle />
       </div>
 
       <nav className="flex-1 space-y-1 p-3">

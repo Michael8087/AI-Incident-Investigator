@@ -73,7 +73,7 @@ function ActionRow({ action }: { action: ResponseActionDef }) {
       </div>
 
       {state !== "idle" && (
-        <div className="mt-3 space-y-1 rounded-md border border-line bg-void/60 p-2.5 font-mono text-[10px] leading-relaxed text-severity-low">
+        <div className="mt-3 space-y-1 rounded-md border border-black/40 bg-black/85 p-2.5 font-mono text-[10px] leading-relaxed text-emerald-400">
           {action.logLines.slice(0, visibleLines).map((line, i) => (
             <p key={i} className="animate-fade-in-up">
               {line}

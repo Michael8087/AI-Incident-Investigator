@@ -6,36 +6,42 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        void: "#05070b",
+        // Base tokens are wired to CSS variables (see globals.css) so the
+        // whole palette can be re-themed at runtime by toggling a class on
+        // <html> — the ones that ever appear with a Tailwind opacity
+        // modifier (e.g. bg-accent/40) use the "rgb(var(..) / <alpha-value>)"
+        // form; the rest (already-composited "soft" tints, borders) just
+        // reference a precomputed color string per theme.
+        void: "rgb(var(--color-void) / <alpha-value>)",
         surface: {
-          DEFAULT: "#0b0e15",
-          raised: "#10141d",
-          card: "#12161f",
-          hover: "#161b26"
+          DEFAULT: "rgb(var(--color-surface) / <alpha-value>)",
+          raised: "var(--color-surface-raised)",
+          card: "var(--color-surface-card)",
+          hover: "var(--color-surface-hover)"
         },
         line: {
-          DEFAULT: "rgba(148,163,184,0.12)",
-          strong: "rgba(148,163,184,0.22)"
+          DEFAULT: "var(--color-line)",
+          strong: "var(--color-line-strong)"
         },
         ink: {
-          DEFAULT: "#e6ebf2",
-          muted: "#8b96a8",
-          faint: "#5b6577"
+          DEFAULT: "var(--color-ink)",
+          muted: "var(--color-ink-muted)",
+          faint: "var(--color-ink-faint)"
         },
         accent: {
-          DEFAULT: "#22d3ee",
-          soft: "rgba(34,211,238,0.12)",
-          strong: "#06b6d4"
+          DEFAULT: "rgb(var(--color-accent) / <alpha-value>)",
+          soft: "var(--color-accent-soft)",
+          strong: "var(--color-accent-strong)"
         },
         severity: {
-          critical: "#ef4444",
-          criticalSoft: "rgba(239,68,68,0.12)",
-          high: "#f97316",
-          highSoft: "rgba(249,115,22,0.12)",
-          medium: "#eab308",
-          mediumSoft: "rgba(234,179,8,0.12)",
-          low: "#22c55e",
-          lowSoft: "rgba(34,197,94,0.12)"
+          critical: "rgb(var(--color-severity-critical) / <alpha-value>)",
+          criticalSoft: "var(--color-severity-critical-soft)",
+          high: "rgb(var(--color-severity-high) / <alpha-value>)",
+          highSoft: "var(--color-severity-high-soft)",
+          medium: "rgb(var(--color-severity-medium) / <alpha-value>)",
+          mediumSoft: "var(--color-severity-medium-soft)",
+          low: "rgb(var(--color-severity-low) / <alpha-value>)",
+          lowSoft: "var(--color-severity-low-soft)"
         }
       },
       fontFamily: {
