@@ -25,5 +25,35 @@ export const EXAMPLE_ALERTS: ExampleAlert[] = [
     label: "Low-signal / ambiguous",
     category: "Needs Triage",
     text: "Endpoint DESKTOP-9F1 ran whoami and systeminfo shortly after user login. No further activity observed in the last hour. User: contractor_temp3."
+  },
+  {
+    label: "DNS tunneling / covert C2",
+    category: "Command and Control",
+    text: "Unusual DNS query volume detected from host SRV-APP04: over 900 TXT record lookups to a single external domain in 5 minutes, each query encoding a small chunk of data. External connection established to 91.xxx.xxx.xxx shortly after. User account: svc_monitoring."
+  },
+  {
+    label: "Web shell on public server",
+    category: "Persistence",
+    text: "A new file 'cache_helper.aspx' was written to the wwwroot directory of public-facing server WEB-EDGE01 by w3wp.exe. The file contains obfuscated code consistent with a web shell. Multiple POST requests followed from external IP 45.xxx.xxx.xxx, each triggering process creation under the IIS worker process."
+  },
+  {
+    label: "Brute force → successful login",
+    category: "Credential Access",
+    text: "Authentication logs show 340 failed login attempts against account admin_svc from external IP 103.xxx.xxx.xxx over 8 minutes, followed by a successful login. Immediately after, net user and net localgroup administrators commands were run on host DC-PRIMARY."
+  },
+  {
+    label: "Insider data staging",
+    category: "Exfiltration Staging",
+    text: "User contractor_temp3 copied 14GB from the shared finance drive to a local folder on LAPTOP-778, then ran 7z to compress it into a single password-protected archive at 11:47PM, outside normal working hours. No ticket or change request is associated with this activity."
+  },
+  {
+    label: "Cloud account compromise",
+    category: "Initial Access",
+    text: "AWS CloudTrail shows a new access key created for IAM user deploy-bot from an unrecognized source IP 178.xxx.xxx.xxx, followed by console login without MFA. Within 2 minutes, the same session called DescribeInstances, CreateUser, and AttachUserPolicy with AdministratorAccess across 3 regions."
+  },
+  {
+    label: "Supply-chain package compromise",
+    category: "Initial Access",
+    text: "Build server CI-RUNNER-02 installed an updated version of a third-party npm dependency during a routine pipeline run. Immediately after install, a postinstall script executed powershell.exe with an encoded command that attempted an external connection to 194.xxx.xxx.xxx. No developer-initiated activity was logged in the same window."
   }
 ];

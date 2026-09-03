@@ -144,6 +144,18 @@ export const TECHNIQUES: Record<string, MitreTechnique> = {
     name: "Inhibit System Recovery",
     tactic: "Impact",
     rationale: "Deletion of backups or shadow copies removes the victim's ability to recover without paying a ransom."
+  },
+  T1098: {
+    id: "T1098",
+    name: "Account Manipulation",
+    tactic: "Persistence",
+    rationale: "Cloud IAM policies or access keys were modified, which is how an attacker turns one compromised session into durable, high-privilege access."
+  },
+  "T1078.004": {
+    id: "T1078.004",
+    name: "Valid Accounts: Cloud Accounts",
+    tactic: "Initial Access",
+    rationale: "A legitimate cloud identity was used from an unrecognized location, which blends attacker actions in with normal administrative activity."
   }
 };
 
@@ -329,7 +341,7 @@ export const INDICATOR_RULES: IndicatorRule[] = [
   {
     id: "brute-force",
     category: "Credential Access",
-    pattern: /multiple failed (login|logon)|brute.?force|account lockout|password spray/i,
+    pattern: /multiple failed (login|logon)|brute.?force|account lockout|password spray|\d+\s+failed (login|logon)/i,
     weight: 14,
     strength: "moderate",
     techniqueIds: ["T1110"],
@@ -359,6 +371,19 @@ export const INDICATOR_RULES: IndicatorRule[] = [
     findingDetail:
       "After initial execution, the host attempted to retrieve an additional payload from an external location — a common second stage after a dropper or macro runs.",
     whyItMatters: "A successful secondary download usually means the attacker now has a more capable, purpose-built tool running on the host, not just the initial lure."
+  },
+  {
+    id: "cloud-privilege-escalation",
+    category: "Privilege Escalation",
+    pattern: /createuser|attachuserpolicy|administratoraccess|create.{0,15}access key|iam user|cloudtrail|without mfa|no mfa/i,
+    weight: 26,
+    strength: "strong",
+    techniqueIds: ["T1098", "T1078.004"],
+    findingTitle: "Cloud IAM privilege escalation",
+    findingDetail:
+      "A cloud identity session created new credentials or attached a high-privilege policy (e.g. administrator access) shortly after an unusual login, consistent with an attacker turning one compromised session into standing access.",
+    whyItMatters:
+      "Cloud privilege escalation is one of the fastest paths from a single stolen credential to full control of an environment — it should be treated as urgently as an on-prem domain admin compromise."
   },
   {
     id: "web-shell",

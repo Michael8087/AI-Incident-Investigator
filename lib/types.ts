@@ -84,3 +84,87 @@ export interface ExampleAlert {
   category: string;
   text: string;
 }
+
+// --- Storyline (process-tree correlation, SentinelOne-style) ---
+
+export type StorylineNodeKind = "user" | "host" | "process" | "network" | "file" | "credential" | "alert";
+
+export interface StorylineNode {
+  id: string;
+  kind: StorylineNodeKind;
+  label: string;
+  sublabel?: string;
+  severity?: Severity;
+}
+
+export interface StorylineEdge {
+  from: string;
+  to: string;
+  label?: string;
+}
+
+export interface Storyline {
+  nodes: StorylineNode[];
+  edges: StorylineEdge[];
+}
+
+// --- Threat intelligence enrichment (simulated) ---
+
+export type IntelVerdict = "malicious" | "suspicious" | "unknown" | "clean";
+
+export interface ThreatIntelRecord {
+  indicator: string;
+  type: "ip" | "process" | "file";
+  verdict: IntelVerdict;
+  maliciousScore: number;
+  country?: string;
+  asn?: string;
+  firstSeen: string;
+  tags: string[];
+  source: string;
+}
+
+// --- SOAR / automated response ---
+
+export type ResponseActionCategory = "containment" | "eradication" | "investigation" | "recovery";
+export type ResponseActionState = "idle" | "running" | "done";
+
+export interface ResponseActionDef {
+  id: string;
+  label: string;
+  description: string;
+  category: ResponseActionCategory;
+  priority: ActionPriority;
+  logLines: string[];
+}
+
+// --- AI reasoning trace (chain-of-thought style explainability) ---
+
+export interface ReasoningStep {
+  id: string;
+  title: string;
+  detail: string;
+}
+
+// --- Copilot chat ---
+
+export type ChatSource = "claude" | "engine";
+
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  source?: ChatSource;
+}
+
+// --- Incident queue (multi-alert SOC console) ---
+
+export type IncidentStatus = "new" | "investigating" | "resolved";
+
+export interface QueueIncident {
+  id: string;
+  rawAlert: string;
+  receivedAt: string;
+  status: IncidentStatus;
+  analysis: IncidentAnalysis;
+}

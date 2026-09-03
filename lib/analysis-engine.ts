@@ -48,7 +48,12 @@ function extractEntities(text: string) {
   while ((m = userPattern.exec(text))) users.add(m[1].replace(/[.,]$/, ""));
 
   const namePattern = /\b([a-z]+\.[a-z]+)\b/g;
-  while ((m = namePattern.exec(text))) users.add(m[1]);
+  while ((m = namePattern.exec(text))) {
+    // Skip fragments of an obfuscated IP like "45.xxx.xxx.xxx" — the "xxx.xxx"
+    // segment otherwise looks exactly like a first.last username.
+    if (/^xxx(\.xxx)*$/i.test(m[1])) continue;
+    users.add(m[1]);
+  }
 
   const ipPattern = /\b(?:\d{1,3}|xxx)\.(?:\d{1,3}|xxx)\.(?:\d{1,3}|xxx)\.(?:\d{1,3}|xxx)\b/gi;
   while ((m = ipPattern.exec(text))) ips.add(m[0]);
@@ -71,7 +76,10 @@ function extractEntities(text: string) {
     "procdump.exe",
     "procdump",
     "mimikatz.exe",
-    "mimikatz"
+    "mimikatz",
+    "w3wp.exe",
+    "w3wp",
+    "aspnet_wp.exe"
   ];
   const lower = text.toLowerCase();
   for (const proc of knownProcesses) {
@@ -270,6 +278,13 @@ function buildRecommendedActions(matched: typeof INDICATOR_RULES, entities: Retu
       reason: "Discovery activity indicates the actor was actively orienting themselves — worth understanding what they now know."
     });
   }
+  if (categories.has("Privilege Escalation")) {
+    actions.push({
+      priority: "immediate",
+      action: "Revoke the access key/session and any IAM policies attached during the suspicious window; enforce MFA on the account.",
+      reason: "Every minute the elevated session stays valid, the attacker can extend access further or create additional backdoor identities."
+    });
+  }
 
   actions.push(...BASE_ACTIONS);
 
@@ -336,6 +351,20 @@ function buildHypotheses(
       title: "Legitimate but poorly-written admin automation",
       plausibility: Math.max(15, 45 - strongCount * 15),
       narrative: "Some internal tooling is genuinely built with encoded PowerShell one-liners for deployment convenience — this should be ruled out by checking with IT/automation owners before assuming hostile intent."
+    });
+    return hyps;
+  }
+
+  if (categories.has("Privilege Escalation")) {
+    hyps.push({
+      title: "Cloud identity compromise with privilege escalation",
+      plausibility: 80,
+      narrative: `A cloud session tied to ${user} escalated its own privileges shortly after an unusual login — consistent with a stolen credential or access key being used to establish standing high-privilege access.`
+    });
+    hyps.push({
+      title: "Legitimate emergency access or misconfigured automation",
+      plausibility: 20,
+      narrative: "Break-glass procedures and IaC automation both occasionally look like this — worth a fast check against any approved change window before treating it as fully hostile."
     });
     return hyps;
   }
@@ -516,6 +545,7 @@ export function analyzeAlert(rawAlert: string): IncidentAnalysis {
   if (categorySet.has("Initial Access") && categorySet.has("Command and Control")) severityFloor = Math.max(severityFloor, 60);
   if (categorySet.has("Defense Evasion")) severityFloor = Math.max(severityFloor, 58);
   if (categorySet.has("Lateral Movement")) severityFloor = Math.max(severityFloor, 55);
+  if (categorySet.has("Privilege Escalation")) severityFloor = Math.max(severityFloor, 76);
 
   const severityScore = Math.min(98, Math.max(6, rawScore + chainBonus + (text.length > 0 ? 4 : 0), severityFloor));
   const severity = severityFromScore(severityScore);
